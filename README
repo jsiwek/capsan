@@ -1,0 +1,106 @@
+capsan
+======
+
+Packet capture sanitizer/anonymizer.  Modifies packet headers to remove
+link-layer addresses, anonymize IP addresses, and shuffle UDP/TCP ports.
+
+TODO: describe dependencies/build/install
+
+IP Anonymization
+----------------
+
+The IP anonymization algorithm is based on Crypto-PAn [1] with features:
+
+* Prefixes are preserved.
+* The mapping is one-to-one.
+* Anonymizations are reproducible and reversible via the use of a
+  consistent 256-bit key.
+* The mapping is pseudo-random and based on AES.
+
+[1] http://www.cc.gatech.edu/computing/Telecomm/projects/cryptopan/
+
+Port Anonymization
+------------------
+
+Port anonymization uses a random permutation of the 16-bit port space.
+
+* The mapping is one-to-one.
+* A given port number always anonymized to a different port number.
+* Anonymizations are reproducible and reversible via the use of a
+  consistent 16-bit seed.
+
+Checksums
+---------
+
+IPv4, UDP, and TCP checksums are automatically corrected.  If the
+original packet had any incorrect checksums, they are forced to also be
+incorrect in the sanitized packet.
+
+Limitations
+-----------
+
+Link-layer support: only a few common link layers are supported and the
+sanitization is trivial -- addresses (e.g. MACs) are just zeroed out.
+
+IPv4 only: the anonymization algorithm is extensible to IPv6, and the
+headers are parsable w/ some effort (IPv6 extension headers can make
+things awkward), but it just wasn't necessary for the use-case at time
+of writing.  Also, anything that's not at IP packet (e.g. ARP) is
+skipped (omitted from the output).
+
+No fragments: IP fragments are always skipped (omitted from output) because
+it's not trivial to deal w/ them correctly (especially w/ the checksum
+auto-correcting feature).
+
+UDP/TCP only: Any packet that doesn't carry UDP or TCP is skipped
+(omitted from output).
+
+Headers only: UDP/TCP payloads are left untouched.  Sanitizing the
+information in higher layer protocols is outside the scope of this tool
+(e.g. despite anonymizing IPs/ports in headers, the same or others may
+be embedded in the payload, depending on the protocol).
+
+Tunnels: If the traces you want to sanitize may contain tunnels that are
+not trivial to detect (e.g. they're encapsulated in UDP, like Teredo),
+this tool does nothing to sanitize or even warn about the inner IP
+packets.  If unsure, running the trace through Bro (available at
+http://bro.org) may help point out in the tunnels.log output which flows
+may need to be pre-filtered out to prevent leaking addrs/ports.
+
+Examples
+--------
+
+Sanitize a packet capture using a given key file::
+
+    capsan -r in.pcap -w out.pcap -k my_capsan_key
+
+If the key file does not exist it will be created and may be re-used
+later to produce consistent addr/port mappings.  Both the key for IP
+anonymization and seed for the port anonymization live in this file.
+
+If reproducibility or reversibility aren't requirements, don't specify a
+key file argument::
+
+    capsan -r in.pcap -w out.pcap
+
+Reverse an anonymized IP::
+
+    capsan -n 1.2.3.4 -k my_capsan_key --reverse
+
+Reverse an anonymized port::
+
+    capsan -t 1234 -k my_capsan_key --reverse
+
+Dump mappings to plain text files::
+
+    capsan -r in.pcap -w out.pcap -a addr_map -p port_map
+
+Mappings are written in the format "anonymous: original" with one
+addr/port per line.  These can also be written in conjuction with a key,
+but note that just the key is sufficient for reversing an addr/port (and
+much more space-efficient).  Existing files are clobbered when writing
+mapping files.
+
+Don't anonymize ports::
+
+    capsan -r in.pcap -w out.pcap -k my_capsan_key --no-ports
