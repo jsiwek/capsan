@@ -228,8 +228,10 @@ static void init_key(uint8_t key[34], const string& key_file)
 			read_key(key, key_file.c_str());
 		else
 			{
+			printf("Generating key...");
 			read_key(key, "/dev/random");
 			write_key(key, key_file.c_str());
+			printf(" done.\n");
 			}
 		}
 	}
