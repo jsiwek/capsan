@@ -24,6 +24,10 @@ set(CMAKE_CXX_FLAGS       "${CMAKE_CXX_FLAGS} -Wall")
 set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS_DEBUG} -DDEBUG")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 
+# Expose C99 functionality from inttypes.h, which would otherwise not be
+# available in C++.
+add_definitions(-D__STDC_FORMAT_MACROS)
+
 add_executable(capsan
                main.cpp
                IPv4Anonymizer.cpp
