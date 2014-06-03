@@ -1,5 +1,6 @@
 #include "PortAnonymizer.hpp"
 
+#include <string.h>
 #include <errno.h>
 #include <cstdio>
 #include <cstdlib>
@@ -28,7 +29,7 @@ static long random_int(long upper)
 PortAnonymizer::PortAnonymizer(unsigned seed)
 	{
 	char state[256];
-	const char* prev_state = initstate(seed, state, sizeof(state));
+	char* prev_state = initstate(seed, state, sizeof(state));
 
 	for ( uint16_t i = 0; i < NUM_PORTS; ++i )
 		port_map[i] = i;
