@@ -1,7 +1,7 @@
 #ifndef PORTANONYMIZER_HPP
 #define PORTANONYMIZER_HPP
 
-#include <cstdint>
+#include <stdint.h>
 
 namespace capsan {
 

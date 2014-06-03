@@ -2,7 +2,7 @@
 
 #include <sys/socket.h>
 #include <arpa/inet.h>
-#include <cstdint>
+#include <stdint.h>
 #include <cstring>
 
 using namespace std;

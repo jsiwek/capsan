@@ -1,7 +1,7 @@
 #ifndef IPV4ANONYMIZER_HPP
 #define IPV4ANONYMIZER_HPP
 
-#include <cstdint>
+#include <stdint.h>
 #include <map>
 #include <openssl/evp.h>
 

@@ -3,7 +3,7 @@
 #include <errno.h>
 #include <cstdio>
 #include <cstdlib>
-#include <cinttypes>
+#include <inttypes.h>
 #include <algorithm>
 #include <arpa/inet.h>
 

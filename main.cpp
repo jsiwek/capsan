@@ -1,7 +1,7 @@
 #include <getopt.h>
 #include <cstdio>
 #include <cstdlib>
-#include <cinttypes>
+#include <inttypes.h>
 #include <string>
 #include <fcntl.h>
 #include <sys/types.h>
