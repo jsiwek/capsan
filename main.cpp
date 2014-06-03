@@ -32,6 +32,7 @@ using namespace capsan;
 static void usage(const string& program)
 	{
 	fprintf(stderr, "%s -r <input> -w <output> [options]\n", program.c_str());
+	fprintf(stderr, "    -h|--help        | display usage info\n");
 	fprintf(stderr, "    -r|--read-pcap   | input pcap file to read\n");
 	fprintf(stderr, "    -w|--write-pcap  | output pcap file to write\n");
 	fprintf(stderr, "    -k|--key-file    | key file to read (or create)\n");
@@ -55,10 +56,11 @@ static option long_options[] = {
 	{"reverse",            no_argument,             0, 'v'},
 	{"no-addrs",           no_argument,             0, 'x'},
 	{"no-ports",           no_argument,             0, 'z'},
+	{"help",               no_argument,             0, 'h'},
 	{0,                    0,                       0,   0},
 };
 
-static const char* opt_string = "r:w:k:a:p:n:t:vxz";
+static const char* opt_string = "r:w:k:a:p:n:t:vxzh";
 
 // - adapted from tcpdump
 // Returns the ones-complement checksum of a chunk of b short-aligned bytes.
@@ -317,6 +319,9 @@ int main(int argc, char** argv)
 		case 'z':
 			port_anon = false;
 			break;
+		case 'h':
+			usage(argv[0]);
+			return 0;
 		default:
 			usage(argv[0]);
 			return 1;
