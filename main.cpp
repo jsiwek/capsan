@@ -409,7 +409,7 @@ int main(int argc, char** argv)
 		int caplen = p.header.caplen - l2len;
 		u_char* ip_data = p.data + l2len;
 
-		if ( caplen < sizeof(ip) )
+		if ( caplen < static_cast<int>(sizeof(ip)) )
 			{
 			// Don't have the main IPv4 header.
 			++num_truncations;
@@ -432,7 +432,7 @@ int main(int argc, char** argv)
 
 		int l3len = ipv4_hdr->ip_hl * 4;
 
-		if ( l3len < sizeof(ip) )
+		if ( l3len < static_cast<int>(sizeof(ip)) )
 			{
 			// A bogus IP header length.
 			++num_truncations;
@@ -467,7 +467,7 @@ int main(int argc, char** argv)
 
 		if ( ipv4_hdr->ip_p == IPPROTO_UDP )
 			{
-			if ( caplen < sizeof(udphdr) )
+			if ( caplen < static_cast<int>(sizeof(udphdr)) )
 				{
 				// Don't have full UDP header.
 				++num_truncations;
@@ -480,7 +480,7 @@ int main(int argc, char** argv)
 			}
 		else
 			{
-			if ( caplen < sizeof(tcphdr) )
+			if ( caplen < static_cast<int>(sizeof(tcphdr)) )
 				{
 				// Don't have main TCP header.
 				++num_truncations;
@@ -490,7 +490,7 @@ int main(int argc, char** argv)
 			tcphdr* tcp = reinterpret_cast<tcphdr*>(l4data);
 			int tcp_hdr_len = tcp->th_off * 4;
 
-			if ( tcp_hdr_len < sizeof(tcphdr) )
+			if ( tcp_hdr_len < static_cast<int>(sizeof(tcphdr)) )
 				{
 				// Bogus TCP header length.
 				++num_truncations;
