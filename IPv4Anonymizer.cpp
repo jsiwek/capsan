@@ -44,7 +44,8 @@ uint32_t IPv4Anonymizer::ChooseFlips(uint32_t addr, bool reverse)
 	uint32_t& rval = reverse ? addr : zero;
 	uint8_t in[16];
 	uint8_t out[16];
-	uint32_t pad_first_32 = *reinterpret_cast<const uint32_t*>(pad);
+	uint32_t pad_first_32;
+	memcpy(&pad_first_32, pad, sizeof(pad_first_32));
 	memcpy(in, pad, sizeof(in));
 
 	for ( uint8_t i = 0; i < 32; ++i )
@@ -53,7 +54,9 @@ uint32_t IPv4Anonymizer::ChooseFlips(uint32_t addr, bool reverse)
 		uint32_t in_first_32 = htonl((~mask & addr) | (mask & pad_first_32));
 		memcpy(in, &in_first_32, sizeof(in_first_32));
 		encrypt(&ctx, out, in);
-		uint32_t bit = choose_bit(i, ntohl(*reinterpret_cast<uint32_t*>(out)));
+		uint32_t out_first_32;
+		memcpy(&out_first_32, out, sizeof(out_first_32));
+		uint32_t bit = choose_bit(i, ntohl(out_first_32));
 
 		if ( reverse )
 			rval ^= bit;
