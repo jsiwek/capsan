@@ -4,7 +4,37 @@ capsan
 Packet capture sanitizer/anonymizer.  Modifies packet headers to remove
 link-layer addresses, anonymize IP addresses, and shuffle UDP/TCP ports.
 
-TODO: describe dependencies/build/install
+Dependencies
+------------
+
+* CMake
+* libpcap and headers
+* OpenSSL libraries and headers
+
+Redhat/RPM family Linux::
+
+    yum install cmake libpcap-devel openssl-devel
+
+Debian/DEB family Linux::
+
+    apt-get install cmake libpcap-dev libssl-dev
+
+Mac OS X:
+
+Compiling source code on Macs requires first downloading/installing
+Xcode and its "Command Line Tools".  Then check in to whether any
+of the dependencies are missing and install them via a preferred
+package manager (e.g. MacPorts, Fink, or Homebrew).
+
+Compiling
+---------
+
+    git clone https://github.com/jsiwek/capsan.git capsan
+    mkdir capsan-build
+    cd capsan-build
+    cmake ../capsan
+    make
+    ./capsan --help
 
 IP Anonymization
 ----------------
