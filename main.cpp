@@ -9,6 +9,10 @@
 #include <unistd.h>
 #include <errno.h>
 
+#ifdef __linux__
+#define __FAVOR_BSD
+#endif // __linux__
+
 #include <netinet/in.h>
 #include <netinet/ip.h>
 #include <netinet/udp.h>
