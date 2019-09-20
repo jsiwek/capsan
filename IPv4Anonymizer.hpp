@@ -58,7 +58,7 @@ private:
 	uint32_t ChooseFlips(uint32_t addr, bool reverse);
 
 	uint8_t pad[16];
-	EVP_CIPHER_CTX ctx;
+	EVP_CIPHER_CTX *ctx;
 	bool have_mappings;
 	std::map<uint32_t, uint32_t> mappings; // anon -> orig (host order)
 };
