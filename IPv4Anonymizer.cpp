@@ -53,7 +53,7 @@ uint32_t IPv4Anonymizer::ChooseFlips(uint32_t addr, bool reverse)
 		uint32_t mask = bitmask32(32 - i);
 		uint32_t in_first_32 = htonl((~mask & addr) | (mask & pad_first_32));
 		memcpy(in, &in_first_32, sizeof(in_first_32));
-		encrypt(&ctx, out, in);
+		encrypt(ctx, out, in);
 		uint32_t out_first_32;
 		memcpy(&out_first_32, out, sizeof(out_first_32));
 		uint32_t bit = choose_bit(i, ntohl(out_first_32));
@@ -72,9 +72,9 @@ uint32_t IPv4Anonymizer::ChooseFlips(uint32_t addr, bool reverse)
 
 IPv4Anonymizer::IPv4Anonymizer(const uint8_t key[32], bool save_mapping)
 	{
-	EVP_CIPHER_CTX_init(&ctx);
+	ctx = EVP_CIPHER_CTX_new();
 
-	if ( ! EVP_EncryptInit_ex(&ctx, EVP_aes_128_ecb(), 0, key, 0) )
+	if ( ! EVP_EncryptInit_ex(ctx, EVP_aes_128_ecb(), 0, key, 0) )
 		{
 		char buf[120];
 		ERR_error_string_n(ERR_get_error(), buf, sizeof(buf));
@@ -82,13 +82,13 @@ IPv4Anonymizer::IPv4Anonymizer(const uint8_t key[32], bool save_mapping)
 		exit(1);
 		}
 
-	encrypt(&ctx, pad, key + 16);
+	encrypt(ctx, pad, key + 16);
 	have_mappings = save_mapping;
 	}
 
 IPv4Anonymizer::~IPv4Anonymizer()
 	{
-	EVP_CIPHER_CTX_cleanup(&ctx);
+	EVP_CIPHER_CTX_free(ctx);
 	}
 
 uint32_t IPv4Anonymizer::Anonymize(uint32_t addr)
