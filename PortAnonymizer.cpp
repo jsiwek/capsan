@@ -67,7 +67,7 @@ void PortAnonymizer::WriteMappings(const char* filename) const
 		}
 
 	for ( uint16_t i = 0; i < NUM_PORTS; ++i )
-		fprintf(f, "%"PRIu16": %"PRIu16"\n", i, reverse_map[i]);
+		fprintf(f, "%" PRIu16 ": %" PRIu16 "\n", i, reverse_map[i]);
 
 	fclose(f);
 	}
