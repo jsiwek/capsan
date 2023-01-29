@@ -270,9 +270,9 @@ static void reverse_port(const string& port, const uint8_t key[34],
 		}
 
 	if ( reverse )
-		printf("%"PRIu16"\n", ntohs(l4anon.DeAnonymize(htons(port_h))));
+		printf("%" PRIu16 "\n", ntohs(l4anon.DeAnonymize(htons(port_h))));
 	else
-		printf("%"PRIu16"\n", ntohs(l4anon.Anonymize(htons(port_h))));
+		printf("%" PRIu16 "\n", ntohs(l4anon.Anonymize(htons(port_h))));
 	}
 
 int main(int argc, char** argv)
